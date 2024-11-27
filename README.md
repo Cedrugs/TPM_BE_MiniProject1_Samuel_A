@@ -6,7 +6,7 @@ A website that manages tasks such as cleaning dishes, go to doctor's appointment
 
 
 
-## Ketentuan
+## Requirements
 
 
 * [x]  Create: Add new data to the database
