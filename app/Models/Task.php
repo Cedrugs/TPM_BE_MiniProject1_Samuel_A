@@ -13,7 +13,8 @@ class Task extends Model
     protected $fillable = [
         "TaskName",
         "TaskDescription",
-        "CategoryId"
+        "CategoryId",
+        "TaskImage"
     ];
 
     public function category(): BelongsTo {
