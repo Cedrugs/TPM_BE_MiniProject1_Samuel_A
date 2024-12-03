@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-    <x-nav-bar />
+    @include('components.nav-bar', ['isLoggedIn' => $isLoggedIn])
     <section id="tasks">
       <div class="tasks-container">
         @forelse ($tasks as $task)
@@ -18,13 +18,15 @@
             <h5 class="card-title">{{ $task->TaskName }}</h5>
             <h6 class="card-title">Category: {{ $task->category->CategoryName }}</h6>
             <p class="card-text">{{ $task->TaskDescription }}</p>
-            <div class="card-action">
-              <a href="{{ route('getEditTaskPage', $task->id) }}" class="btn btn-primary">Edit</a>
-              <form action="{{ route('deleteTask', $task->id) }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-danger">Delete</button>
-              </form>
-            </div>
+            @if ($isLoggedIn)
+              <div class="card-action">
+                <a href="{{ route('getEditTaskPage', $task->id) }}" class="btn btn-primary">Edit</a>
+                <form action="{{ route('deleteTask', $task->id) }}" method="POST">
+                  @csrf
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </div>
+            @endif
           </div>
         </div>
         @empty

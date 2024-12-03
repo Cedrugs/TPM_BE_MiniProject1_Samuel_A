@@ -13,10 +13,21 @@
             <a class="nav-link" href="/create-task">Create Task</a>
             </li>
         </ul>
-        <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+        <div class="navbar-action">
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            @if ($isLoggedIn)
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
+            @else
+                <a href="{{ route('getLoginPage') }}" class="btn btn-primary">Login</a>
+                <a href="{{ route('getRegisterPage') }}" class="btn btn-primary">Register</a>
+            @endif
         </div>
     </div>
     </nav>

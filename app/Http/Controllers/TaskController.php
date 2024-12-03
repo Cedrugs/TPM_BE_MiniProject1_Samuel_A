@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     function getCreateTaskPage() {
         $categories = Category::all();
-        return view("createTask", compact("categories"));
+        $isLoggedIn = Auth::check();
+        return view("createTask", compact("categories", 'isLoggedIn'));
     }
 
     function createTask(Request $request) {
@@ -38,13 +40,15 @@ class TaskController extends Controller
 
     function getHome() {
         $tasks = Task::paginate(20);
-        return view('home', compact('tasks'));
+        $isLoggedIn = Auth::check();
+        return view('home', compact('tasks', 'isLoggedIn'));
     }
 
     function getEditTaskPage($taskId) {
         $task = Task::findOrFail($taskId);
         $categories = Category::all();
-        return view("editTask", compact("task", "categories"));
+        $isLoggedIn = Auth::check();
+        return view("editTask", compact("task", "categories", "isLoggedIn"));
     }
 
     function editTask(Request $request, $taskId) {
