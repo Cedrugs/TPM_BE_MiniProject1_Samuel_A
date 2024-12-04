@@ -14,7 +14,8 @@ class Task extends Model
         "TaskName",
         "TaskDescription",
         "CategoryId",
-        "TaskImage"
+        "TaskImage",
+        "CreatedBy"
     ];
 
     public function category(): BelongsTo {

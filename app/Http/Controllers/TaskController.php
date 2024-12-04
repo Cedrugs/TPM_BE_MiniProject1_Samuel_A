@@ -33,14 +33,21 @@ class TaskController extends Controller
             "TaskDescription" => $request->TaskDescription,
             "TaskImage" => $request->TaskImage,
             "CategoryId" => $request->CategoryId,
+            "CreatedBy" => Auth::id()
         ]);
 
         return redirect(route( "getHome"));
     }
 
     function getHome() {
-        $tasks = Task::paginate(20);
+        $tasks = null;
+
         $isLoggedIn = Auth::check();
+
+        if ($isLoggedIn) {
+            $tasks = Task::where("CreatedBy", Auth::id())->orderBy('created_at', 'desc')->paginate(20);
+        }
+
         return view('home', compact('tasks', 'isLoggedIn'));
     }
 

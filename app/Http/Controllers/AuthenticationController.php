@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WelcomeMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AuthenticationController extends Controller
 {
@@ -33,6 +35,8 @@ class AuthenticationController extends Controller
 
         Auth::attempt($credentials);
         $request->session()->regenerate();
+
+        Mail::to($request->email)->send(new WelcomeMail($request->name));
 
         return redirect('/');
     }

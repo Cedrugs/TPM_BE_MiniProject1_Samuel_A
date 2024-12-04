@@ -24,7 +24,8 @@ class TaskFactory extends Factory
             "TaskName" => fake()->name(),
             "TaskDescription" => fake()->paragraph(1),
             "CategoryId" => random_int(1, 20),
-            "TaskImage" => fake()->imageUrl()
+            "TaskImage" => fake()->imageUrl(),
+            "CreatedBy" => random_int(1,3),
         ];
     }
 }

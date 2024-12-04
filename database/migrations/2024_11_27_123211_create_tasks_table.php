@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('TaskDescription');
             $table->string('TaskImage');
             $table->foreignId('CategoryId')->references("id")->on("categories")->cascadeOnDelete()->cascadeOnUpdate();
+            $table->integer("CreatedBy");
             $table->timestamps();
         });
     }
