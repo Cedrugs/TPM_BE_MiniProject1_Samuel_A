@@ -15,6 +15,7 @@ A website that manages tasks such as cleaning dishes, go to doctor's appointment
 * [x]  Seeder: Manually add 20 custom data to database.
 * [x]  CRUD: Create, Read, Update and Delete function.
 * [x]  Authentication: Login, Register, and Middleware functionality.
+* [x]  APIS: Create, Read, Update, and Delete function.
 
  
 

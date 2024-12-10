@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class TaskController extends Controller
+class TaskAPIController extends Controller
 {
-    function getCreateTaskPage() {
-        $categories = Category::all();
-        $isLoggedIn = Auth::check();
-        return view("createTask", compact("categories", 'isLoggedIn'));
+    function getTasks(Request $request) {
+        $user = $request->user();
+
+        $tasks = Task::where('CreatedBy', $user->id)->get();
+        return response()->json([
+            "data" => $tasks,
+        ]);
     }
 
     function createTask(Request $request) {
+        $user = $request->user();
+
         $request->validate([
             "TaskName" => "required",
             "TaskDescription" => "required",
@@ -25,7 +28,7 @@ class TaskController extends Controller
             "TaskName.required" => "Task Name is required.",
             "TaskDescription.required" => "Task Description is required.",
             "TaskImage.required" => "Task Image Url is required.",
-            "CategoryId.required" => "Category is required."
+            "CategoryId.required" => "Category is required.",
         ]);
 
         Task::create([
@@ -33,32 +36,15 @@ class TaskController extends Controller
             "TaskDescription" => $request->TaskDescription,
             "TaskImage" => $request->TaskImage,
             "CategoryId" => $request->CategoryId,
-            "CreatedBy" => Auth::id()
+            "CreatedBy" => $user->id
         ]);
 
-        return redirect(route( "getHome"));
-    }
-
-    function getHome() {
-        $tasks = null;
-
-        $isLoggedIn = Auth::check();
-
-        if ($isLoggedIn) {
-            $tasks = Task::where("CreatedBy", Auth::id())->orderBy('created_at', 'desc')->paginate(20);
-        }
-
-        return view('home', compact('tasks', 'isLoggedIn'));
-    }
-
-    function getEditTaskPage($taskId) {
-        $task = Task::findOrFail($taskId);
-        $categories = Category::all();
-        $isLoggedIn = Auth::check();
-        return view("editTask", compact("task", "categories", "isLoggedIn"));
+        return response('New task created succesfully', 201);
     }
 
     function editTask(Request $request, $taskId) {
+        $user = $request->user();
+
         $request->validate([
             "TaskName" => "required",
             "TaskDescription" => "required",
@@ -71,18 +57,31 @@ class TaskController extends Controller
             "CategoryId.required" => "Category is required."
         ]);
 
-        Task::findOrFail($taskId)->update([
+        $data = Task::where('CreatedBy', $user->id)->where('id', $taskId)->first();
+
+        if (!$data) {
+            return response('Invalid task id!', 400);
+        }
+
+        $data->update([
             "TaskName" => $request->TaskName,
             "TaskDescription" => $request->TaskDescription,
             "TaskImage" => $request->TaskImage,
             "CategoryId" => $request->CategoryId,
         ]);
 
-        return redirect(route( "getHome"));
+        return response('Task '.$taskId.' edited succesfully', 201);
     }
 
-    function deleteTask($taskId) {
-        Task::findOrFail($taskId)->delete();
-        return redirect(route( "getHome"));
+    function deleteTask(Request $request, $taskId) {
+        $user = $request->user();
+        $data = Task::where('CreatedBy', $user->id)->where('id', $taskId)->first();
+
+        if (!$data) {
+            return response('Invalid task id!', 400);
+        }
+
+        $data->delete();
+        return response('Task '.$taskId.' deleted succesfully', 201);
     }
 }
